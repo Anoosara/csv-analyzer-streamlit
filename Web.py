@@ -60,7 +60,7 @@ if st.session_state["files"]:
     st.markdown("🟢 You can now move on to the **data analysis** page.")
 
     with st.sidebar:
-        st.page_link("pages/Web1", label="👉 📊 Proceed to Analysis (Web1)")
+        st.page_link("pages/web1", label="👉 📊 Proceed to Analysis (Web1)")
 
 
 else:
