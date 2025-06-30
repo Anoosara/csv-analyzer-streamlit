@@ -61,7 +61,10 @@ if st.session_state["files"]:
 
     # 📍 ลิงก์ไปหน้า Web1 ผ่าน Sidebar
     with st.sidebar:
-        st.page_link("pages/Web1.py", label="📊 Proceed to Analysis (Web1)", icon="➡️")
+      st.markdown("""
+    👉 <a href="/Web1" target="_self">📊 Proceed to Analysis (Web1)</a>
+""", unsafe_allow_html=True)
+
 
 else:
     st.warning("⚠️ No files uploaded yet.")
