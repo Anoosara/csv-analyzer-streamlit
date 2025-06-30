@@ -77,8 +77,18 @@ if uploaded_file:
         labels={"Diameter (µm)": "Diameter (µm)", "Probe ID": "Probe ID"},
         template='simple_white'
          )
-        fig_dia.add_hline(y=24, line_dash="solid", line_color="red", annotation_text="UCL", annotation_position="top left")
-        fig_dia.add_hline(y=14, line_dash="solid", line_color="red", annotation_text="LCL", annotation_position="bottom left")
+        # ✅ เพิ่มเส้นแนวนอน UCL / LCL
+        fig_dia.add_hline(y=24, line_dash="solid", line_color="red", 
+                  annotation_text="UCL = 24", annotation_position="top left")
+        fig_dia.add_hline(y=14, line_dash="solid", line_color="red", 
+                  annotation_text="LCL = 14", annotation_position="bottom left")
+
+        # ✅ เปิดเส้น Grid
+        fig_dia.update_layout(
+        xaxis=dict(showgrid=True),
+        yaxis=dict(showgrid=True),
+        plot_bgcolor='white'
+)
 
         st.plotly_chart(fig_dia, use_container_width=True)
 
