@@ -55,16 +55,12 @@ if st.session_state["files"]:
         del st.session_state["files"][delete_file]
         st.rerun()
 
-    # ✅ แจ้งผลอัปโหลด และลิงก์ไปหน้า Web1 จาก sidebar
+    # ✅ แจ้งผลอัปโหลด และลิงก์ไปหน้า Web1
     st.success("🎉 Your CSV files have been uploaded successfully!")
     st.markdown("🟢 You can now move on to the **data analysis** page.")
 
-    # 📍 ลิงก์ไปหน้า Web1 ผ่าน Sidebar
-    with st.sidebar:
-      st.markdown("""
-    👉 <a href="/Web1" target="_self">📊 Proceed to Analysis (Web1)</a>
-""", unsafe_allow_html=True)
-
+    # ✅ ลิงก์ไป Web1.py อย่างถูกต้อง
+    st.page_link("pages/Web1.py", label="👉 📊 Proceed to Analysis (Web1)", icon="📈")
 
 else:
     st.warning("⚠️ No files uploaded yet.")
