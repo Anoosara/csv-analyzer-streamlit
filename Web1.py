@@ -126,14 +126,14 @@ if uploaded_file:
         labels={"Planarity (µm)": "Planarity (µm)", "Probe ID": "Probe ID"},
         template='simple_white'
         
-)
-        st.plotly_chart(fig_plan, use_container_width=True)
-         # ✅ เพิ่ม Grid
+)   # ✅ เพิ่ม Grid
         fig_plan.update_layout(
         xaxis=dict(showgrid=True),
         yaxis=dict(showgrid=True),
         plot_bgcolor='white'
        )
+        st.plotly_chart(fig_plan, use_container_width=True)
+      
         plt.close()
         # Top 5 Max Diameter
         top5_max = df_data.sort_values(by='Diameter (µm)', ascending=False).reset_index(drop=True).head(5)[['User Defined Label 4', 'Diameter (µm)']]
