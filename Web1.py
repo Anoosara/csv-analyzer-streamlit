@@ -77,11 +77,26 @@ if uploaded_file:
         labels={"Diameter (µm)": "Diameter (µm)", "Probe ID": "Probe ID"},
         template='simple_white'
          )
-        # ✅ เพิ่มเส้นแนวนอน UCL / LCL
-        fig_dia.add_hline(y=24, line_dash="solid", line_color="red", 
-                  annotation_text="UCL = 24", annotation_position="top left")
-        fig_dia.add_hline(y=14, line_dash="solid", line_color="red", 
-                  annotation_text="LCL = 14", annotation_position="bottom left")
+        # ✅ เพิ่มเส้นแนวนอน UCL / LCL แบบชัดเจน
+        fig_dia.add_hline(
+        y=24,
+        line_dash="solid",
+        line_color="red",
+        line_width=2,
+        annotation_text="UCL = 24",
+        annotation_position="top left",
+        layer="above"
+        )
+        fig_dia.add_hline(
+        y=14,
+        line_dash="solid",
+        line_color="red",
+        line_width=2,
+        annotation_text="LCL = 14",
+        annotation_position="bottom left",
+        layer="above"
+)
+
 
         # ✅ เปิดเส้น Grid
         fig_dia.update_layout(
