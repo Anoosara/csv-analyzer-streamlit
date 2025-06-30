@@ -136,13 +136,15 @@ if uploaded_file:
        )
         plt.close()
         # Top 5 Max Diameter
-        top5_max = df_data.sort_values(by='Diameter (µm)', ascending=False).head(5)[['User Defined Label 4', 'Diameter (µm)']]
+        top5_max = df_data.sort_values(by='Diameter (µm)', ascending=False).reset_index(drop=True).head(5)[['User Defined Label 4', 'Diameter (µm)']]
+
         top5_max = top5_max.rename(columns={'User Defined Label 4': 'Probe name'})
         st.subheader("🔝 Top 5 Largest Diameters")
         st.table(top5_max)
 
         # Top 5 Min Diameter
-        top5_min = df_data.sort_values(by='Diameter (µm)', ascending=True).head(5)[['User Defined Label 4', 'Diameter (µm)']]
+        top5_min = df_data.sort_values(by='Diameter (µm)', ascending=True).reset_index(drop=True).head(5)[['User Defined Label 4', 'Diameter (µm)']]
+
         top5_min = top5_min.rename(columns={'User Defined Label 4': 'Probe name'})
         st.subheader("🔻 Top 5 Smallest Diameters")
         st.table(top5_min)
