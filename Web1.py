@@ -117,29 +117,23 @@ if uploaded_file:
 
 
         # Planarity Plot
-        fig2, ax2 = plt.subplots(figsize=(12, 6))
-        ax2.scatter(x_labels, y_planarity, color='green', s=10, label='Measured Planarity')  # ✅ ใช้ x_index เหมือนกราฟก่อนหน้า
-        ax2.set_title("Planarity vs Probe ID")
-        ax2.set_xlabel("Probe ID")
-        ax2.set_ylabel("Planarity (µm)")
-        # ✅ ป้องกัน label ซ้อน
-        # ✅ ตั้ง tick ตาม Probe ID จริง
-        ax2.set_xticks(range(0, int(x_labels.max()) + 1, 20))
-        ax2.set_xlim(0, int(x_labels.max()) + 5)
-
-        ax2.grid(True)
-        ax2.legend()
-        # ✅ Download button
-        planarity_img = io.BytesIO()
-        plt.savefig(planarity_img, format='png')
-        planarity_img.seek(0)
-        st.download_button(
-            label="📸 Download Planarity Plot as PNG",
-            data=planarity_img,
-            file_name="planarity_plot.png",
-            mime="image/png"
-        )
-        st.pyplot(fig2)
+        # ----------- Plotly Interactive Planarity Plot -----------
+        fig_plan = px.scatter(
+        df_sorted,
+        x='Probe ID',
+        y='Planarity (µm)',
+        title="Planarity vs Probe ID",
+        labels={"Planarity (µm)": "Planarity (µm)", "Probe ID": "Probe ID"},
+        template='simple_white'
+        
+)
+        st.plotly_chart(fig_plan, use_container_width=True)
+         # ✅ เพิ่ม Grid
+        fig_plan.update_layout(
+        xaxis=dict(showgrid=True),
+        yaxis=dict(showgrid=True),
+        plot_bgcolor='white'
+       )
         plt.close()
         # Top 5 Max Diameter
         top5_max = df_data.sort_values(by='Diameter (µm)', ascending=False).head(5)[['User Defined Label 4', 'Diameter (µm)']]
