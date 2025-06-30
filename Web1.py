@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import chardet
 import os
 import io
+import plotly.express as px
+
 from datetime import datetime
 
 st.set_page_config(
@@ -66,33 +68,26 @@ if uploaded_file:
         x_labels = df_sorted['Probe ID']
         y_diameter = df_sorted['Diameter (µm)']
 
-        plt.figure(figsize=(12, 6))
-        plt.scatter(x_labels, y_diameter, color='blue', s=10, label='Measured Diameter')
-        plt.axhline(y=24, color='red', linestyle='-', linewidth=2, label='UCL')
-        plt.axhline(y=14, color='red', linestyle='-', linewidth=2, label='LCL')
-        plt.xlabel("Probe ID")
-        plt.ylabel("Diameter (µm)")
-        plt.title("Diameter vs Probe ID")
+        # ----------- Plotly Interactive Diameter Plot -----------
+        fig_dia = px.scatter(
+        df_sorted,
+        x='Probe ID',
+        y='Diameter (µm)',
+        title="Diameter vs Probe ID",
+        labels={"Diameter (µm)": "Diameter (µm)", "Probe ID": "Probe ID"},
+        template='simple_white'
+         )
+        fig_dia.add_hline(y=24, line_dash="solid", line_color="red", annotation_text="UCL", annotation_position="top left")
+        fig_dia.add_hline(y=14, line_dash="solid", line_color="red", annotation_text="LCL", annotation_position="bottom left")
 
-        # ✅ ตั้ง tick ตาม Probe ID จริง
-        plt.xticks(ticks=range(0, int(x_labels.max()) + 1, 20))
-        plt.xlim(0, int(x_labels.max()) + 5)  # เพิ่มขอบเขตนิดเพื่อไม่ให้โดนตัด
+        st.plotly_chart(fig_dia, use_container_width=True)
+
+    
+
+       
         
-        plt.grid(True)
-        plt.tight_layout()
-        plt.legend()
-        diameter_img = io.BytesIO()
-
-        plt.savefig(diameter_img, format='png')
-        diameter_img.seek(0)
-        st.download_button(
-            label="📸 Download Diameter Plot as PNG",
-            data=diameter_img,
-            file_name="diameter_plot.png",
-            mime="image/png"
-        )
-        st.pyplot(plt)
         plt.close()
+
         y_planarity = df_sorted['Planarity (µm)']  # ✅ เพิ่มบรรทัดนี้
 
 
