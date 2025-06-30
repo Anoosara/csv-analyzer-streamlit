@@ -59,8 +59,8 @@ if st.session_state["files"]:
     st.success("🎉 Your CSV files have been uploaded successfully!")
     st.markdown("🟢 You can now move on to the **data analysis** page.")
 
-    # ✅ ลิงก์ไป Web1.py อย่างถูกต้อง
-    st.page_link("pages/Web1.py", label="👉 📊 Proceed to Analysis (Web1)", icon="📈")
+    with st.sidebar:
+        st.page_link("Web1", label="👉 📊 Proceed to Analysis (Web1)")
 
 else:
     st.warning("⚠️ No files uploaded yet.")
