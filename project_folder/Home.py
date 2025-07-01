@@ -66,11 +66,11 @@ if st.session_state["files"]:
     st.markdown("🟢 You can now move on to the **data analysis** page.")
 
     # 🔘 ปุ่มลิงก์ไปยัง Web1 (ภายในแอป ไม่เปิดแท็บใหม่)
-    st.page_link("pages/Web1.py", label="👉 📊 Go to Analysis Page")
+    st.page_link("pages/Probe Card Analyzer.py", label="👉 📊 Go to Analysis Page")
 
     # 🔸 ลิงก์ใน Sidebar ด้วย
     with st.sidebar:
-        st.page_link("pages/Web1.py", label="👉 📊 Proceed to Analysis (Web1)")
+        st.page_link("pages/Probe Card Analyzer.py", label="👉 📊 Proceed to Analysis (Web1)")
 
 else:
     st.warning("⚠️ No files uploaded yet.")
