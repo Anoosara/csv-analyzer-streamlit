@@ -109,13 +109,7 @@ else:
                   ])
                 st.plotly_chart(fig_max, use_container_width=True)
 
-                try:
-                  img_max = fig_max.to_image(format="png")
-                  st.download_button("🖼️ Download Top 5 Largest Table (PNG)", img_max,
-                       file_name="top5_largest_table.png", mime="image/png")
-                except Exception:
-                  st.warning("⚠️ Cannot export largest table to PNG. Please install 'kaleido' if running locally.")
- 
+                
                # 🔻 Top 5 Smallest Diameters
                 top5_min = df_data[['Probe ID', 'User Defined Label 4', 'Diameter (µm)']].copy()
                 top5_min = top5_min.rename(columns={'User Defined Label 4': 'Probe name'})
@@ -128,12 +122,7 @@ else:
                   ])
                 st.plotly_chart(fig_min, use_container_width=True)
 
-                try:
-                 img_min = fig_min.to_image(format="png")
-                 st.download_button("🖼️ Download Top 5 Smallest Table (PNG)", img_min,
-                       file_name="top5_smallest_table.png", mime="image/png")
-                except Exception:
-                 st.warning("⚠️ Cannot export smallest table to PNG. Please install 'kaleido' if running locally.")
+               
 
 
             
