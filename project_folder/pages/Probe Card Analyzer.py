@@ -97,40 +97,27 @@ else:
                 # สมมุติ df คือ DataFrame หลักที่มีข้อมูล Diameter
      
 
-               # 🔝 Top 5 Largest Diameters
-                top5_max = df_data[['Probe ID', 'User Defined Label 4', 'Diameter (µm)']].copy()
+              # Top 5 Max Diameter
+                top5_max = df_data.sort_values(by='Diameter (µm)', ascending=False).reset_index(drop=True).head(5)
                 top5_max = top5_max.rename(columns={'User Defined Label 4': 'Probe name'})
-                top5_max = top5_max.sort_values(by='Diameter (µm)', ascending=False).reset_index(drop=True).head(5)
-                
-               # 🔵 เปลี่ยน subheader เป็น markdown
-                st.markdown("""
-                 <h4 style='color: #0d6efd; margin-top: 30px; margin-bottom: 10px;'>
-                  🔝 Top 5 Largest Diameters
-                 </h4>
-                """, unsafe_allow_html=True)
-                fig_max = go.Figure(data=[go.Table(
-                 header=dict(values=list(top5_max.columns), fill_color='lightblue', align='center'),
-                 cells=dict(values=[top5_max[col] for col in top5_max.columns], fill_color='white', align='center'))
-                  ])
-                st.plotly_chart(fig_max, use_container_width=True)
+                st.subheader("🔝 Top 5 Largest Diameters")
+                st.table(top5_max[['Probe name', 'Diameter (µm)']])
 
-                
-               # 🔻 Top 5 Smallest Diameters
-                top5_min = df_data[['Probe ID', 'User Defined Label 4', 'Diameter (µm)']].copy()
+                # Top 5 Min Diameter
+                top5_min = df_data.sort_values(by='Diameter (µm)', ascending=True).reset_index(drop=True).head(5)
                 top5_min = top5_min.rename(columns={'User Defined Label 4': 'Probe name'})
-                top5_min = top5_min.sort_values(by='Diameter (µm)', ascending=True).reset_index(drop=True).head(5)
-                
-               # 🔴 เปลี่ยน subheader เป็น markdown พร้อมลด margin-top ให้ติดกันมากขึ้น
-                st.markdown("""
-                 <h4 style='color: #d6336c; margin-top: 10px; margin-bottom: 10px;'>
-                  🔻 Top 5 Smallest Diameters
-                 </h4>
-                """, unsafe_allow_html=True)
+                st.subheader("🔻 Top 5 Smallest Diameters")
+                st.table(top5_min[['Probe name', 'Diameter (µm)']])
+
+
+
                 fig_min = go.Figure(data=[go.Table(
-                 header=dict(values=list(top5_min.columns), fill_color='lightpink', align='center'),
-                 cells=dict(values=[top5_min[col] for col in top5_min.columns], fill_color='white', align='center'))
-                  ])
+                   columnwidth=[1, 2, 1],
+                   header=dict(values=list(top5_min.columns), fill_color='lightpink', align='center', height=30),
+                   cells=dict(values=[top5_min[col] for col in top5_min.columns], fill_color='white', align='center', height=25)
+                 )])
                 st.plotly_chart(fig_min, use_container_width=True)
+
 
             
 
