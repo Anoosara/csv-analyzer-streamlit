@@ -101,7 +101,9 @@ else:
                 top5_max = top5_max.sort_values(by='Diameter (µm)', ascending=False).reset_index(drop=True).head(5)
                 st.subheader("🔝 Top 5 Largest Diameters")
                 st.table(top5_max[['Probe ID', 'Probe name', 'Diameter (µm)']])
-
+                # ⬇️ ปุ่มดาวน์โหลด CSV
+                csv_max = top5_max.to_csv(index=False).encode('utf-8')
+                st.download_button("⬇️ Download Top 5 Largest CSV", csv_max, file_name="top5_largest.csv", mime="text/csv")
                 
 
             
