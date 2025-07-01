@@ -97,19 +97,17 @@ else:
                 # สมมุติ df คือ DataFrame หลักที่มีข้อมูล Diameter
      
 
-              # Top 5 Max Diameter
-                top5_max = df_data.sort_values(by='Diameter (µm)', ascending=False).reset_index(drop=True).head(5)
-                top5_max = top5_max.rename(columns={'User Defined Label 4': 'Probe name'})
-                st.subheader("🔝 Top 5 Largest Diameters")
-                st.table(top5_max[['Probe name', 'Diameter (µm)']])
+              # 🔝 Top 5 Max Diameter
+            top5_max = df_data.sort_values(by='Diameter (µm)', ascending=False).reset_index(drop=True).head(5)
+            top5_max = top5_max.rename(columns={'User Defined Label 4': 'Probe name'})
+            st.subheader("🔝 Top 5 Largest Diameters")
+            st.table(top5_max[['Probe ID', 'Probe name', 'Diameter (µm)']])
 
-                # Top 5 Min Diameter
-                top5_min = df_data.sort_values(by='Diameter (µm)', ascending=True).reset_index(drop=True).head(5)
-                top5_min = top5_min.rename(columns={'User Defined Label 4': 'Probe name'})
-                st.subheader("🔻 Top 5 Smallest Diameters")
-                st.table(top5_min[['Probe name', 'Diameter (µm)']])
-
-
+             # 🔻 Top 5 Min Diameter
+            top5_min = df_data.sort_values(by='Diameter (µm)', ascending=True).reset_index(drop=True).head(5)
+            top5_min = top5_min.rename(columns={'User Defined Label 4': 'Probe name'})
+            st.subheader("🔻 Top 5 Smallest Diameters")
+            st.table(top5_min[['Probe ID', 'Probe name', 'Diameter (µm)']])
 
          
 
@@ -117,7 +115,7 @@ else:
             
 
                 # Download Excel
-                if st.button("💾 Download Excel File", key=f"download_{filename}"):
+            if st.button("💾 Download Excel File", key=f"download_{filename}"):
                     towrite = io.BytesIO()
                     df_data.to_excel(towrite, index=False, engine='openpyxl')
                     towrite.seek(0)
