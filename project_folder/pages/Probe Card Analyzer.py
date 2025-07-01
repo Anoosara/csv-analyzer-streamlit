@@ -111,12 +111,7 @@ else:
 
 
 
-                fig_min = go.Figure(data=[go.Table(
-                   columnwidth=[1, 2, 1],
-                   header=dict(values=list(top5_min.columns), fill_color='lightpink', align='center', height=30),
-                   cells=dict(values=[top5_min[col] for col in top5_min.columns], fill_color='white', align='center', height=25)
-                 )])
-                st.plotly_chart(fig_min, use_container_width=True)
+         
 
 
             
