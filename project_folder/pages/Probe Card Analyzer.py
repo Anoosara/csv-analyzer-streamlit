@@ -98,12 +98,28 @@ else:
                 top5_max = top5_max.rename(columns={'User Defined Label 4': 'Probe name'})
                 st.subheader("🔝 Top 5 Largest Diameters")
                 st.table(top5_max[['Probe name', 'Diameter (µm)']])
+                # 🔸 ปุ่มดาวน์โหลด Largest
+                csv_largest = top_5_largest.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                label="⬇️ Download Largest Diameters CSV",
+                data=csv_largest,
+                file_name="top_5_largest_diameters.csv",
+                mime='text/csv'
+                                   )
 
                 # Top 5 Min Diameter
                 top5_min = df_data.sort_values(by='Diameter (µm)', ascending=True).reset_index(drop=True).head(5)
                 top5_min = top5_min.rename(columns={'User Defined Label 4': 'Probe name'})
                 st.subheader("🔻 Top 5 Smallest Diameters")
                 st.table(top5_min[['Probe name', 'Diameter (µm)']])
+                # 🔸 ปุ่มดาวน์โหลด Smallest
+                csv_smallest = top_5_smallest.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                label="⬇️ Download Smallest Diameters CSV",
+                data=csv_smallest,
+                file_name="top_5_smallest_diameters.csv",
+                mime='text/csv'
+                                  )
 
                 # Download Excel
                 if st.button("💾 Download Excel File", key=f"download_{filename}"):
