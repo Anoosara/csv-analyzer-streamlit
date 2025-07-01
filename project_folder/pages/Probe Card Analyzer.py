@@ -92,6 +92,9 @@ else:
                 )
                 fig_plan.update_layout(xaxis=dict(showgrid=True), yaxis=dict(showgrid=True), plot_bgcolor='white')
                 st.plotly_chart(fig_plan, use_container_width=True)
+                # สมมุติ df คือ DataFrame หลักที่มีข้อมูล Diameter
+                top_5_largest = df.sort_values(by="Diameter (µm)", ascending=False).head(5)
+                top_5_smallest = df.sort_values(by="Diameter (µm)", ascending=True).head(5)
 
                 # Top 5 Max Diameter
                 top5_max = df_data.sort_values(by='Diameter (µm)', ascending=False).reset_index(drop=True).head(5)
