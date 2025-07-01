@@ -97,38 +97,43 @@ else:
                 # สมมุติ df คือ DataFrame หลักที่มีข้อมูล Diameter
      
 
-                # Top 5 Max Diameter
-                # 🔝 Top 5 Largest Diameters
+               # 🔝 Top 5 Largest Diameters
                 top5_max = df_data[['Probe ID', 'User Defined Label 4', 'Diameter (µm)']].copy()
                 top5_max = top5_max.rename(columns={'User Defined Label 4': 'Probe name'})
                 top5_max = top5_max.sort_values(by='Diameter (µm)', ascending=False).reset_index(drop=True).head(5)
                 st.subheader("🔝 Top 5 Largest Diameters")
 
-                # ➕ สร้างตารางแบบ plotly
                 fig_max = go.Figure(data=[go.Table(
-    header=dict(values=list(top5_max.columns), fill_color='lightblue', align='center'),
-    cells=dict(values=[top5_max[col] for col in top5_max.columns], fill_color='white', align='center'))
-])
+                 header=dict(values=list(top5_max.columns), fill_color='lightblue', align='center'),
+                 cells=dict(values=[top5_max[col] for col in top5_max.columns], fill_color='white', align='center'))
+                  ])
                 st.plotly_chart(fig_max, use_container_width=True)
 
-                # ➕ ปุ่มดาวน์โหลด PNG
-                img_max = fig_max.to_image(format="png")
-                st.download_button("🖼️ Download Top 5 Largest Table (PNG)", img_max, file_name="top5_largest_table.png", mime="image/png")
-
-                # 🔻 Top 5 Smallest Diameters
+                try:
+                  img_max = fig_max.to_image(format="png")
+                  st.download_button("🖼️ Download Top 5 Largest Table (PNG)", img_max,
+                       file_name="top5_largest_table.png", mime="image/png")
+                except Exception:
+                  st.warning("⚠️ Cannot export largest table to PNG. Please install 'kaleido' if running locally.")
+ 
+               # 🔻 Top 5 Smallest Diameters
                 top5_min = df_data[['Probe ID', 'User Defined Label 4', 'Diameter (µm)']].copy()
                 top5_min = top5_min.rename(columns={'User Defined Label 4': 'Probe name'})
                 top5_min = top5_min.sort_values(by='Diameter (µm)', ascending=True).reset_index(drop=True).head(5)
                 st.subheader("🔻 Top 5 Smallest Diameters")
 
                 fig_min = go.Figure(data=[go.Table(
-                header=dict(values=list(top5_min.columns), fill_color='lightpink', align='center'),
-                cells=dict(values=[top5_min[col] for col in top5_min.columns], fill_color='white', align='center'))
-                    ])
+                 header=dict(values=list(top5_min.columns), fill_color='lightpink', align='center'),
+                 cells=dict(values=[top5_min[col] for col in top5_min.columns], fill_color='white', align='center'))
+                  ])
                 st.plotly_chart(fig_min, use_container_width=True)
 
-                img_min = fig_min.to_image(format="png")
-                st.download_button("🖼️ Download Top 5 Smallest Table (PNG)", img_min, file_name="top5_smallest_table.png", mime="image/png")
+                try:
+                 img_min = fig_min.to_image(format="png")
+                 st.download_button("🖼️ Download Top 5 Smallest Table (PNG)", img_min,
+                       file_name="top5_smallest_table.png", mime="image/png")
+                except Exception:
+                 st.warning("⚠️ Cannot export smallest table to PNG. Please install 'kaleido' if running locally.")
 
 
             
