@@ -109,7 +109,8 @@ else:
                   ])
                 st.plotly_chart(fig_max, use_container_width=True)
 
-                
+                st.markdown('<div style="margin-top: -40px;"></div>', unsafe_allow_html=True)
+
                # 🔻 Top 5 Smallest Diameters
                 top5_min = df_data[['Probe ID', 'User Defined Label 4', 'Diameter (µm)']].copy()
                 top5_min = top5_min.rename(columns={'User Defined Label 4': 'Probe name'})
