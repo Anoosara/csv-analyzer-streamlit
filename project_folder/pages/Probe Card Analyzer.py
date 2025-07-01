@@ -116,7 +116,9 @@ else:
                 st.subheader("🔻 Top 5 Smallest Diameters")
                 st.table(top5_min[['Probe ID', 'Probe name', 'Diameter (µm)']])
 
-              
+                csv_min = top5_min.to_csv(index=False).encode('utf-8')
+                st.download_button("⬇️ Download Top 5 Smallest CSV", csv_min, file_name="top5_smallest.csv", mime="text/csv")
+
 
                 # Download Excel
                 if st.button("💾 Download Excel File", key=f"download_{filename}"):
