@@ -59,11 +59,25 @@ if st.session_state["files"]:
     st.success("🎉 Your CSV files have been uploaded successfully!")
     st.markdown("🟢 You can now move on to the **data analysis** page.")
 
+    # 🔘 ปุ่มเปิด Web1 ในแท็บใหม่
+    st.markdown("""
+        <a href="/Web1" target="_blank">
+            <button style='padding: 10px 20px; font-size: 16px; border-radius: 6px; background-color: #4CAF50; color: white; border: none; cursor: pointer;'>
+                👉 📊 Open Analysis Page (New Tab)
+            </button>
+        </a>
+    """, unsafe_allow_html=True)
+
+    # 🔸 ลิงก์ใน Sidebar ด้วย
     with st.sidebar:
-         st.page_link("pages/Web1.py", label="👉 📊 Proceed to Analysis (Web1)")
-
-
-
+        st.page_link("pages/Web1.py", label="👉 📊 Proceed to Analysis (Web1)")
+        st.markdown("""
+            <a href="/Web1" target="_blank">
+                <button style='padding: 8px 16px; font-size: 14px; border-radius: 5px; background-color: #2196F3; color: white; border: none; cursor: pointer; width: 100%;'>
+                    🧭 Open Web1 in New Tab
+                </button>
+            </a>
+        """, unsafe_allow_html=True)
 
 else:
     st.warning("⚠️ No files uploaded yet.")
