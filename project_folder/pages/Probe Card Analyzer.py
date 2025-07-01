@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import chardet
 import io
 import plotly.express as px
+import plotly.graph_objects as go
+
 from datetime import datetime
 
 st.set_page_config(
@@ -96,14 +98,23 @@ else:
      
 
                 # Top 5 Max Diameter
+                # 🔝 Top 5 Largest Diameters
                 top5_max = df_data[['Probe ID', 'User Defined Label 4', 'Diameter (µm)']].copy()
                 top5_max = top5_max.rename(columns={'User Defined Label 4': 'Probe name'})
                 top5_max = top5_max.sort_values(by='Diameter (µm)', ascending=False).reset_index(drop=True).head(5)
                 st.subheader("🔝 Top 5 Largest Diameters")
-                st.table(top5_max[['Probe ID', 'Probe name', 'Diameter (µm)']])
-                # ⬇️ ปุ่มดาวน์โหลด CSV
-                csv_max = top5_max.to_csv(index=False).encode('utf-8')
-                st.download_button("⬇️ Download Top 5 Largest CSV", csv_max, file_name="top5_largest.csv", mime="text/csv")
+
+                # ➕ สร้างตารางแบบ plotly
+                fig_max = go.Figure(data=[go.Table(
+    header=dict(values=list(top5_max.columns), fill_color='lightblue', align='center'),
+    cells=dict(values=[top5_max[col] for col in top5_max.columns], fill_color='white', align='center'))
+])
+                st.plotly_chart(fig_max, use_container_width=True)
+
+                # ➕ ปุ่มดาวน์โหลด PNG
+                img_max = fig_max.to_image(format="png")
+                st.download_button("🖼️ Download Top 5 Largest Table (PNG)", img_max, file_name="top5_largest_table.png", mime="image/png")
+
                 
 
             
