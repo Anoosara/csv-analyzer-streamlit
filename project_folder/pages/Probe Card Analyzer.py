@@ -5,7 +5,8 @@ import chardet
 import io
 import plotly.express as px
 import plotly.graph_objects as go
-
+import matplotlib.pyplot as plt
+import seaborn as sns
 from datetime import datetime
 
 st.set_page_config(
@@ -15,6 +16,26 @@ st.set_page_config(
 )
 
 st.title("📄 CSV Probe Card Analyzer")
+def save_table_as_image(df, title, filename):
+    fig, ax = plt.subplots(figsize=(6, 2 + 0.3 * len(df)))
+    fig.patch.set_visible(False)
+    ax.axis('off')
+    ax.axis('tight')
+    table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    plt.title(title, fontsize=12)
+    plt.tight_layout()
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png")
+    st.download_button(
+        label=f"📷 Download {filename}",
+        data=buf.getvalue(),
+        file_name=f"{filename}.png",
+        mime="image/png"
+    )
+    buf.close()
+    plt.close()
 
 if "files" not in st.session_state or not st.session_state["files"]:
     st.warning("⚠️ No files uploaded. Please upload from Main page.")
@@ -102,12 +123,16 @@ else:
             top5_max = top5_max.rename(columns={'User Defined Label 4': 'Probe name'})
             st.subheader("🔝 Top 5 Largest Diameters")
             st.table(top5_max[['Probe ID', 'Probe name', 'Diameter (µm)']])
+            save_table_as_image(top5_max[['Probe ID', 'Probe name', 'Diameter (µm)']],
+                    "Top 5 Largest Diameters", "top5_largest_diameters")
 
              # 🔻 Top 5 Min Diameter
             top5_min = df_data.sort_values(by='Diameter (µm)', ascending=True).reset_index(drop=True).head(5)
             top5_min = top5_min.rename(columns={'User Defined Label 4': 'Probe name'})
             st.subheader("🔻 Top 5 Smallest Diameters")
             st.table(top5_min[['Probe ID', 'Probe name', 'Diameter (µm)']])
+            save_table_as_image(top5_min[['Probe ID', 'Probe name', 'Diameter (µm)']],
+                    "Top 5 Smallest Diameters", "top5_smallest_diameters")
 
          
 
