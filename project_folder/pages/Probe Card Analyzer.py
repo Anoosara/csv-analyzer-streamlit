@@ -115,20 +115,26 @@ else:
                 img_max = fig_max.to_image(format="png")
                 st.download_button("🖼️ Download Top 5 Largest Table (PNG)", img_max, file_name="top5_largest_table.png", mime="image/png")
 
-                
-
-            
-                                   
-
-                # Top 5 Min Diameter
+                # 🔻 Top 5 Smallest Diameters
                 top5_min = df_data[['Probe ID', 'User Defined Label 4', 'Diameter (µm)']].copy()
                 top5_min = top5_min.rename(columns={'User Defined Label 4': 'Probe name'})
                 top5_min = top5_min.sort_values(by='Diameter (µm)', ascending=True).reset_index(drop=True).head(5)
                 st.subheader("🔻 Top 5 Smallest Diameters")
-                st.table(top5_min[['Probe ID', 'Probe name', 'Diameter (µm)']])
 
-                csv_min = top5_min.to_csv(index=False).encode('utf-8')
-                st.download_button("⬇️ Download Top 5 Smallest CSV", csv_min, file_name="top5_smallest.csv", mime="text/csv")
+                fig_min = go.Figure(data=[go.Table(
+                header=dict(values=list(top5_min.columns), fill_color='lightpink', align='center'),
+                cells=dict(values=[top5_min[col] for col in top5_min.columns], fill_color='white', align='center'))
+                    ])
+                st.plotly_chart(fig_min, use_container_width=True)
+
+                img_min = fig_min.to_image(format="png")
+                st.download_button("🖼️ Download Top 5 Smallest Table (PNG)", img_min, file_name="top5_smallest_table.png", mime="image/png")
+
+
+            
+                                   
+
+               
 
 
                 # Download Excel
