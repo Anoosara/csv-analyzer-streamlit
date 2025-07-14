@@ -74,7 +74,7 @@ else:
                         break
 
                 df_data.reset_index(drop=True, inplace=True)
-                df_data.columns = df_data.columns.str.strip()
+                df_data.columns = df_data.columns.astype(str).str.strip()
                 df_data.columns = [str(col) if pd.notna(col) else f"Unnamed_{i}" for i, col in enumerate(df_data.columns)]
                 df_data = df_data.loc[:, ~df_data.columns.duplicated()]
                 df_data = df_data.dropna(axis=1, how='all')
