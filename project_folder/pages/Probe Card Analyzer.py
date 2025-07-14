@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import chardet
@@ -36,6 +35,7 @@ def save_table_as_image(df, title, filename):
     buf.close()
     plt.close()
 
+# ตรวจสอบว่าอัปโหลดไฟล์หรือยัง
 if "files" not in st.session_state or not st.session_state["files"]:
     st.warning("⚠️ No files uploaded. Please upload from Main page.")
 else:
@@ -50,9 +50,12 @@ else:
                 del st.session_state["files"][filename]
                 st.rerun()
 
-            raw_bytes = file_dict[filename].read()
-            encoding = chardet.detect(raw_bytes)['encoding']
-            file_dict[filename].seek(0)
+            uploaded_file = file_dict[filename]
+            raw_bytes = uploaded_file.read()
+            uploaded_file.seek(0)
+
+            result = chardet.detect(raw_bytes)
+            encoding = result['encoding']
 
             lines = raw_bytes.decode(encoding).splitlines()
             header_row_idx = None
@@ -65,8 +68,8 @@ else:
                 st.error("❌ 'Probe ID' not found in the CSV file")
                 continue
 
-            file_dict[filename].seek(0)
-            df_data = pd.read_csv(file_dict[filename], skiprows=header_row_idx, encoding=encoding)
+            uploaded_file.seek(0)
+            df_data = pd.read_csv(uploaded_file, skiprows=header_row_idx, encoding=encoding)
 
             df_data.columns = df_data.iloc[0]
             df_data = df_data[1:]
@@ -92,6 +95,7 @@ else:
 
             df_sorted = df_data.sort_values(by='Probe ID').reset_index(drop=True)
 
+            # 🔵 Diameter Chart
             fig_dia = px.scatter(
                 df_sorted,
                 x='Probe ID',
@@ -107,6 +111,7 @@ else:
             fig_dia.update_layout(xaxis=dict(showgrid=True), yaxis=dict(showgrid=True), plot_bgcolor='white')
             st.plotly_chart(fig_dia, use_container_width=True)
 
+            # 🔵 Planarity Chart
             fig_plan = px.scatter(
                 df_sorted,
                 x='Probe ID',
@@ -118,18 +123,23 @@ else:
             fig_plan.update_layout(xaxis=dict(showgrid=True), yaxis=dict(showgrid=True), plot_bgcolor='white')
             st.plotly_chart(fig_plan, use_container_width=True)
 
+            # 🔝 Top 5 Max
             top5_max = df_data.sort_values(by='Diameter (µm)', ascending=False).reset_index(drop=True).head(5)
             top5_max = top5_max.rename(columns={'User Defined Label 4': 'Probe name'})
             st.subheader("🔝 Top 5 Largest Diameters")
             st.table(top5_max[['Probe ID', 'Probe name', 'Diameter (µm)']])
-            save_table_as_image(top5_max[['Probe ID', 'Probe name', 'Diameter (µm)']], "Top 5 Largest Diameters", "top5_largest_diameters")
+            save_table_as_image(top5_max[['Probe ID', 'Probe name', 'Diameter (µm)']],
+                                "Top 5 Largest Diameters", "top5_largest_diameters")
 
+            # 🔻 Top 5 Min
             top5_min = df_data.sort_values(by='Diameter (µm)', ascending=True).reset_index(drop=True).head(5)
             top5_min = top5_min.rename(columns={'User Defined Label 4': 'Probe name'})
             st.subheader("🔻 Top 5 Smallest Diameters")
             st.table(top5_min[['Probe ID', 'Probe name', 'Diameter (µm)']])
-            save_table_as_image(top5_min[['Probe ID', 'Probe name', 'Diameter (µm)']], "Top 5 Smallest Diameters", "top5_smallest_diameters")
+            save_table_as_image(top5_min[['Probe ID', 'Probe name', 'Diameter (µm)']],
+                                "Top 5 Smallest Diameters", "top5_smallest_diameters")
 
+            # 💾 Export Excel
             if st.button("💾 Download Excel File", key=f"download_{filename}"):
                 towrite = io.BytesIO()
                 df_data.to_excel(towrite, index=False, engine='openpyxl')
