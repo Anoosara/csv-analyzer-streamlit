@@ -40,7 +40,14 @@ if uploaded_files:
         raw_bytes = file.read()
         encoding = chardet.detect(raw_bytes)["encoding"]
         file.seek(0)
-        df = pd.read_csv(file, header=None, encoding=encoding)
+        try:
+          df = pd.read_csv(file, encoding=encoding)  # อย่าใส่ header=None ถ้าไม่มั่นใจ
+        except pd.errors.ParserError:
+         file.seek(0)
+         df = pd.read_csv(file, encoding=encoding, delimiter=';')  # ลองใช้ ; เผื่อเป็น CSV แบบยุโรป
+        except Exception as e:
+            st.error(f"❌ Failed to read {file.name}: {str(e)}")
+            continue  # ข้ามไฟล์นี้ไป
         st.session_state["files"][file.name] = df
 
 # 🔹 แสดงรายชื่อไฟล์ และลบได้
