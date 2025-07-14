@@ -56,8 +56,7 @@ else:
             header_row_idx = None
             for i, row in df_raw.iterrows():
                 if row.astype(str).str.contains("Probe Output Table", case=False, na=False).any():
-                 next_row = df_raw.iloc[i + 1].astype(str).str.contains("Probe ID", case=False, na=False).any()
-                 if next_row:
+                 
                    header_row_idx = i+1
                    break
 
