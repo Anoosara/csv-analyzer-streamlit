@@ -55,8 +55,8 @@ else:
             # หา header row จาก df_raw
             header_row_idx = None
             for i, row in df_raw.iterrows():
-                if row.astype(str).str.contains("Probe ID", case=False, na=False).any():
-                   header_row_idx = i
+                if row.astype(str).str.contains("Probe Output Table", case=False, na=False).any():
+                   header_row_idx = i+1
                    break
 
             if header_row_idx is None:
