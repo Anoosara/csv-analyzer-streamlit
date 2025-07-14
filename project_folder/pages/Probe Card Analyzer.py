@@ -97,7 +97,7 @@ else:
              else:
                 st.success("✅ Data loaded and processed successfully")
                 st.dataframe(df_data)
-                df_sorted = df_data.copy()
+                df_sorted = df_data.sort_values(by='Probe ID').reset_index(drop=True)
 
                 # Plot Diameter
                 fig_dia = px.scatter(
