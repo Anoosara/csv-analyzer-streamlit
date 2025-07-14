@@ -55,11 +55,10 @@ else:
             # หา header row จาก df_raw
             header_row_idx = None
             for i, row in df_raw.iterrows():
-                row_str = row.astype(str)
-                if (row_str.str.contains("Probe ID", case=False, na=False).any() and
-                    row_str.str.contains("Diameter", case=False, na=False).any() and
-                    row_str.str.contains("Planarity", case=False, na=False).any()):
-                    header_row_idx = i
+              if row.astype(str).str.contains("Probe Output Table", case=False, na=False).any():
+                 next_row = df_raw.iloc[i+1].astype(str)
+                 if next_row.str.contains("Probe ID", case=False, na=False).any():
+                    header_row_idx = i + 1
                     break
 
             if header_row_idx is None:
