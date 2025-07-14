@@ -51,8 +51,16 @@ else:
                 st.rerun()
 
             uploaded_file = file_dict[filename]
-            raw_bytes = uploaded_file.read()
-            uploaded_file.seek(0)
+            if hasattr(uploaded_file, 'read'):
+              raw_bytes = uploaded_file.read()
+              uploaded_file.seek(0)
+            elif hasattr(uploaded_file, 'getvalue'):
+             raw_bytes = uploaded_file.getvalue()
+             uploaded_file.seek(0)
+            else:
+              st.error("❌ Uploaded file is in an unexpected format.")
+              continue
+
 
             result = chardet.detect(raw_bytes)
             encoding = result['encoding']
