@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 import chardet
 import io
 import plotly.express as px
@@ -53,11 +52,12 @@ else:
             df_raw = file_dict[filename]
 
             # หา header row
+            # หา header row จาก df_raw
             header_row_idx = None
             for i, row in df_raw.iterrows():
                 if row.astype(str).str.contains("Probe ID", case=False, na=False).any():
-                    header_row_idx = i
-                    break
+                   header_row_idx = i
+                   break
 
             if header_row_idx is None:
                 st.error("❌ 'Probe ID' not found in the CSV file")
