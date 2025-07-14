@@ -70,6 +70,9 @@ else:
             else:
              df_data = df_raw.iloc[header_row_idx:].copy()
              df_data.columns = df_data.iloc[0]  # ตั้งชื่อ header
+             df_data.columns = df_data.columns.str.replace(r"\s+", " ", regex=True)  # รวมช่องว่างซ้อน
+             df_data.columns = df_data.columns.str.strip()  # ลบช่องว่างหัวท้าย
+
              df_data = df_data[1:]  # ลบแถวที่เป็น header ออก
 
     # ✅ ลบแถวว่างทั้งหมดในทีเดียว
