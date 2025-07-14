@@ -67,7 +67,7 @@ else:
                 df_data = df_raw.iloc[header_row_idx:].copy()
                 df_data.columns = df_data.iloc[0]
                 df_data = df_data[1:]
-
+                df_data.columns = df_data.columns.astype(str).str.replace(r"\s+", " ", regex=True).str.strip()
                 for i, row in df_data.iterrows():
                     if row.isnull().all() or (row.astype(str).str.strip() == '').all():
                         df_data = df_data.loc[:i - 1]
