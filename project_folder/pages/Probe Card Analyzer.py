@@ -55,10 +55,12 @@ else:
             # หา header row จาก df_raw
             header_row_idx = None
             for i, row in df_raw.iterrows():
-                if row.astype(str).str.contains("Probe Output Table", case=False, na=False).any():
-                 
-                   header_row_idx = i+1
-                   break
+                row_str = row.astype(str)
+                if (row_str.str.contains("Probe ID", case=False, na=False).any() and
+                    row_str.str.contains("Diameter", case=False, na=False).any() and
+                    row_str.str.contains("Planarity", case=False, na=False).any()):
+                    header_row_idx = i
+                    break
 
             if header_row_idx is None:
                 st.error("❌ 'Probe ID' not found in the CSV file")
