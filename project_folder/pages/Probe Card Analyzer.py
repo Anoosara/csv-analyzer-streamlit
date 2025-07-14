@@ -82,8 +82,8 @@ else:
                 # แปลงคอลัมน์เป้าหมายเป็นตัวเลข
                 df_data['Diameter (µm)'] = pd.to_numeric(df_data.get('Diameter (µm)'), errors='coerce')
                 df_data['Planarity (µm)'] = pd.to_numeric(df_data.get('Planarity (µm)'), errors='coerce')
-                df_data['Probe ID'] = pd.to_numeric(df_data.get('Probe ID'), errors='coerce')
-                df_data = df_data.dropna(subset=['Probe ID'])
+                df_data['Probe ID'] = df_data['Probe ID'].astype(str).str.strip()
+                df_data = df_data[df_data['Probe ID'].str.lower() != 'nan']
 
                 st.success("✅ Data loaded and processed successfully")
                 st.dataframe(df_data)
