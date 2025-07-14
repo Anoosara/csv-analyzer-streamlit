@@ -78,12 +78,19 @@ else:
                 df_data.columns = [str(col) if pd.notna(col) else f"Unnamed_{i}" for i, col in enumerate(df_data.columns)]
                 df_data = df_data.loc[:, ~df_data.columns.duplicated()]
                 df_data = df_data.dropna(axis=1, how='all')
-
+                if 'Probe ID' not in df_data.columns:
+                 st.error("❌ 'Probe ID' column not found in the CSV.")
+                 st.stop()
                 # แปลงคอลัมน์เป้าหมายเป็นตัวเลข
                 df_data['Diameter (µm)'] = pd.to_numeric(df_data.get('Diameter (µm)'), errors='coerce')
                 df_data['Planarity (µm)'] = pd.to_numeric(df_data.get('Planarity (µm)'), errors='coerce')
+
                 df_data['Probe ID'] = df_data['Probe ID'].astype(str).str.strip()
                 df_data = df_data[df_data['Probe ID'].str.lower() != 'nan']
+                df_data = df_data[df_data['Probe ID'] != '']
+                df_data['Probe ID'] = pd.to_numeric(df_data['Probe ID'], errors='coerce')
+                df_data = df_data.dropna(subset=['Probe ID'])  # ลบ NaN ที่ยังเหลือ
+                df_data['Probe ID'] = df_data['Probe ID'].astype(int)
 
                 st.success("✅ Data loaded and processed successfully")
                 st.dataframe(df_data)
