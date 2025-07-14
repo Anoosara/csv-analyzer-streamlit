@@ -53,53 +53,39 @@ else:
 
             # หา header row
             # หา header row จาก df_raw
-            # ✅ ฟังก์ชันหา header row แบบยืดหยุ่น
-            def find_header_row(df, keywords=["Probe ID", "Diameter", "Planarity"]):
-             for i, row in df.iterrows():
-               for keyword in keywords:
-                 if row.astype(str).str.contains(keyword, case=False, na=False).any():
-                   return i
-             return None
-
-# ใช้หา header row จริง
-            header_row_idx = find_header_row(df_raw)
+            header_row_idx = None
+            for i, row in df_raw.iterrows():
+                if row.astype(str).str.contains("Probe ID", case=False, na=False).any():
+                   header_row_idx = i
+                   break
 
             if header_row_idx is None:
-               st.error("❌ ไม่พบ header row ที่มีคำว่า 'Probe ID' หรือ 'Diameter'")
-               st.dataframe(df_raw.head(30))  # แสดงให้ดู 30 แถวแรก
+                st.error("❌ 'Probe ID' not found in the CSV file")
             else:
-             df_data = df_raw.iloc[header_row_idx:].copy()
-             df_data.columns = df_data.iloc[0]  # ตั้งชื่อ header
-             df_data.columns = df_data.columns.str.replace(r"\s+", " ", regex=True)  # รวมช่องว่างซ้อน
-             df_data.columns = df_data.columns.str.strip()  # ลบช่องว่างหัวท้าย
+                df_data = df_raw.iloc[header_row_idx:].copy()
+                df_data.columns = df_data.iloc[0]
+                df_data = df_data[1:]
 
-             df_data = df_data[1:]  # ลบแถวที่เป็น header ออก
+                for i, row in df_data.iterrows():
+                    if row.isnull().all() or (row.astype(str).str.strip() == '').all():
+                        df_data = df_data.loc[:i - 1]
+                        break
 
-    # ✅ ลบแถวว่างทั้งหมดในทีเดียว
-             df_data = df_data[~df_data.apply(lambda row: row.isnull().all() or (row.astype(str).str.strip() == '').all(), axis=1)]
+                df_data.reset_index(drop=True, inplace=True)
+                df_data.columns = df_data.columns.str.strip()
+                df_data.columns = [str(col) if pd.notna(col) else f"Unnamed_{i}" for i, col in enumerate(df_data.columns)]
+                df_data = df_data.loc[:, ~df_data.columns.duplicated()]
+                df_data = df_data.dropna(axis=1, how='all')
 
-             df_data.reset_index(drop=True, inplace=True)
-             df_data.columns = df_data.columns.str.strip()
-             df_data.columns = [str(col) if pd.notna(col) else f"Unnamed_{i}" for i, col in enumerate(df_data.columns)]
-             df_data = df_data.loc[:, ~df_data.columns.duplicated()]
-             df_data = df_data.dropna(axis=1, how='all')
-
-    # ✅ แปลงคอลัมน์เป็นตัวเลขอย่างปลอดภัย
-             for col in ['Diameter (µm)', 'Planarity (µm)', 'Probe ID']:
-              if col in df_data.columns:
-                df_data[col] = pd.to_numeric(df_data[col], errors='coerce')
-
-             if 'Probe ID' in df_data.columns:
+                # แปลงคอลัมน์เป้าหมายเป็นตัวเลข
+                df_data['Diameter (µm)'] = pd.to_numeric(df_data.get('Diameter (µm)'), errors='coerce')
+                df_data['Planarity (µm)'] = pd.to_numeric(df_data.get('Planarity (µm)'), errors='coerce')
+                df_data['Probe ID'] = pd.to_numeric(df_data.get('Probe ID'), errors='coerce')
                 df_data = df_data.dropna(subset=['Probe ID'])
-                df_data = df_data.sort_values(by='Probe ID').reset_index(drop=True)
 
-    # ✅ ตรวจสอบว่าไฟล์ว่างไหม
-             if df_data.empty:
-                st.error("❌ Loaded data is empty after cleaning. Please check the file format.")
-                st.dataframe(df_raw.head(30))
-             else:
                 st.success("✅ Data loaded and processed successfully")
                 st.dataframe(df_data)
+
                 df_sorted = df_data.sort_values(by='Probe ID').reset_index(drop=True)
 
                 # Plot Diameter
