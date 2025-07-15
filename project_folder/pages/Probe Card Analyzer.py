@@ -49,59 +49,47 @@ else:
             if st.button(f"🗑️ Remove this file", key=f"remove_{filename}"):
              del st.session_state["files"][filename]
              st.rerun() 
-            #df_raw = file_dict[filename]
-            from io import StringIO
+            df_raw = file_dict[filename]
 
-            # แปลง DataFrame จากไฟล์ upload ให้กลายเป็นข้อความ raw lines
-            raw_bytes = file_dict[filename].to_csv(index=False).encode('utf-8')
-            lines = raw_bytes.decode('utf-8', errors='ignore').splitlines()
-
-             # ค้นหาบรรทัดที่มี 'Probe ID'
-            start_idx = None
-            for i, line in enumerate(lines):
-              if "Probe ID" in line:
-               start_idx = i
-               break
-
-            if start_idx is None:
-                st.error("❌ ไม่พบหัวตาราง 'Probe ID' ในไฟล์!")
-                st.stop()
-
-# ตัดเฉพาะบรรทัดที่เป็นตารางจริง
-            data_lines = []
-            for line in lines[start_idx:]:
-               if line.strip() == "" or line.lower().startswith("alignment") or "Operator" in line:
+            # หา header row
+            # หา header row จาก df_raw
+            header_row_idx = None
+            for i, row in df_raw.iterrows():
+                if row.astype(str).str.contains("Probe ID", case=False, na=False).any():
+                   header_row_idx = i
                    break
-               data_lines.append(line)
 
-# แปลงกลับเป็น DataFrame
-            data_str = "".join(data_lines)
-            df_data = pd.read_csv(StringIO(data_str))
-            df_data.columns = df_data.columns.str.strip()
+            if header_row_idx is None:
+                st.error("❌ 'Probe ID' not found in the CSV file")
+            else:
+                df_data = df_raw.iloc[header_row_idx:].copy()
+                df_data.columns = df_data.iloc[0]
+                df_data = df_data[1:]
 
-# ทำความสะอาดเบื้องต้น
-            df_data = df_data.dropna(axis=1, how="all")
-            df_data.reset_index(drop=True, inplace=True)
+                for i, row in df_data.iterrows():
+                    if row.isnull().all() or (row.astype(str).str.strip() == '').all():
+                        df_data = df_data.loc[:i - 1]
+                        break
 
-            
+                df_data.reset_index(drop=True, inplace=True)
+                df_data.columns = df_data.columns.str.strip()
+                df_data.columns = [str(col) if pd.notna(col) else f"Unnamed_{i}" for i, col in enumerate(df_data.columns)]
+                df_data = df_data.loc[:, ~df_data.columns.duplicated()]
+                df_data = df_data.dropna(axis=1, how='all')
+
                 # แปลงคอลัมน์เป้าหมายเป็นตัวเลข
-            df_data['Diameter (µm)'] = pd.to_numeric(df_data.get('Diameter (µm)'), errors='coerce')
-            df_data['Planarity (µm)'] = pd.to_numeric(df_data.get('Planarity (µm)'), errors='coerce')
+                df_data['Diameter (µm)'] = pd.to_numeric(df_data.get('Diameter (µm)'), errors='coerce')
+                df_data['Planarity (µm)'] = pd.to_numeric(df_data.get('Planarity (µm)'), errors='coerce')
+                df_data['Probe ID'] = pd.to_numeric(df_data.get('Probe ID'), errors='coerce')
+                df_data = df_data.dropna(subset=['Probe ID'])
 
-            df_data['Probe ID'] = df_data['Probe ID'].astype(str).str.strip()
-            df_data = df_data[df_data['Probe ID'].str.lower() != 'nan']
-            df_data = df_data[df_data['Probe ID'] != '']
-            df_data['Probe ID'] = pd.to_numeric(df_data['Probe ID'], errors='coerce')
-            df_data = df_data.dropna(subset=['Probe ID'])  # ลบ NaN ที่ยังเหลือ
-            df_data['Probe ID'] = df_data['Probe ID'].astype(int)
+                st.success("✅ Data loaded and processed successfully")
+                st.dataframe(df_data)
 
-            st.success("✅ Data loaded and processed successfully")
-            st.dataframe(df_data)
-
-            df_sorted = df_data.sort_values(by='Probe ID').reset_index(drop=True)
+                df_sorted = df_data.sort_values(by='Probe ID').reset_index(drop=True)
 
                 # Plot Diameter
-            fig_dia = px.scatter(
+                fig_dia = px.scatter(
                     df_sorted,
                     x='Probe ID',
                     y='Diameter (µm)',
@@ -109,15 +97,15 @@ else:
                     labels={"Diameter (µm)": "Diameter (µm)", "Probe ID": "Probe ID"},
                     template='simple_white'
                 )
-            fig_dia.add_hline(y=24, line_dash="solid", line_color="red", line_width=2,
+                fig_dia.add_hline(y=24, line_dash="solid", line_color="red", line_width=2,
                                   annotation_text="UCL = 24", annotation_position="top left")
-            fig_dia.add_hline(y=14, line_dash="solid", line_color="red", line_width=2,
+                fig_dia.add_hline(y=14, line_dash="solid", line_color="red", line_width=2,
                                   annotation_text="LCL = 14", annotation_position="bottom left")
-            fig_dia.update_layout(xaxis=dict(showgrid=True), yaxis=dict(showgrid=True), plot_bgcolor='white')
-            st.plotly_chart(fig_dia, use_container_width=True)
+                fig_dia.update_layout(xaxis=dict(showgrid=True), yaxis=dict(showgrid=True), plot_bgcolor='white')
+                st.plotly_chart(fig_dia, use_container_width=True)
 
                 # Plot Planarity
-            fig_plan = px.scatter(
+                fig_plan = px.scatter(
                     df_sorted,
                     x='Probe ID',
                     y='Planarity (µm)',
@@ -125,8 +113,8 @@ else:
                     labels={"Planarity (µm)": "Planarity (µm)", "Probe ID": "Probe ID"},
                     template='simple_white'
                 )
-            fig_plan.update_layout(xaxis=dict(showgrid=True), yaxis=dict(showgrid=True), plot_bgcolor='white')
-            st.plotly_chart(fig_plan, use_container_width=True)
+                fig_plan.update_layout(xaxis=dict(showgrid=True), yaxis=dict(showgrid=True), plot_bgcolor='white')
+                st.plotly_chart(fig_plan, use_container_width=True)
                 # สมมุติ df คือ DataFrame หลักที่มีข้อมูล Diameter
      
 
