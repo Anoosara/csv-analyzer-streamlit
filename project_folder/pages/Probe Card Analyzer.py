@@ -75,8 +75,9 @@ else:
                data_lines.append(line)
 
 # แปลงกลับเป็น DataFrame
-            data_str = "\n".join(data_lines)
+            data_str = "".join(data_lines)
             df_data = pd.read_csv(StringIO(data_str))
+            df_data.columns = df_data.columns.str.strip()
 
 # ทำความสะอาดเบื้องต้น
             df_data = df_data.dropna(axis=1, how="all")
