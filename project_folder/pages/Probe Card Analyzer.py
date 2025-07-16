@@ -65,7 +65,7 @@ else:
                 df_sorted.to_excel(towrite, index=False, engine='openpyxl')
                 towrite.seek(0)
                 st.download_button(
-                    label="📥 Download Contact Resistance Excel",
+                    label="📥Download Analyzed Excel",
                     data=towrite,
                     file_name=f"analyzed_contact_{filename}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
