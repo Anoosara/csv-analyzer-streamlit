@@ -33,7 +33,7 @@ if "multi_files_df" not in st.session_state:
 
 # ✅ ปุ่มลบข้อมูลทั้งหมด
 if st.session_state.multi_files_df:
-    if st.button("🗑️ ลบข้อมูลที่เคยอัปโหลดทั้งหมด"):
+    if st.button("🗑️ Delete all uploaded data"):
         st.session_state.multi_files_df = {}
         st.rerun()
 
@@ -98,4 +98,4 @@ if st.session_state.multi_files_df:
                 st.rerun()
 
 # ➡️ ไปหน้า Analyzer 2
-st.page_link("pages/Probe Card Analyzer.py", label="➡️ ไปยังหน้า 🔍 Probe Card Analyzer ")
+st.page_link("pages/Probe Card Analyzer.py", label="➡️ Go to 🔍 Probe Card Analyzer ")
