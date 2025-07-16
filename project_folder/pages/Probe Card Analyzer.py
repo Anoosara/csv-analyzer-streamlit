@@ -97,7 +97,7 @@ else:
                 st.subheader("🔝 Top 5 Largest Diameters")
                 st.table(top5_max[['Probe ID', 'Probe name', 'Diameter (µm)']])
                 save_table_as_image(top5_max[['Probe ID', 'Probe name', 'Diameter (µm)']],
-                                    "Top 5 Largest Diameters", f"top5_largest_")
+                                    "Top 5 Largest Diameters", f"top5_largest_{filename}")
 
                 # 🔻 Top 5 Smallest Diameters
                 top5_min = df_sorted.sort_values(by='Diameter (µm)', ascending=True).head(5)
@@ -105,7 +105,7 @@ else:
                 st.subheader("🔻 Top 5 Smallest Diameters")
                 st.table(top5_min[['Probe ID', 'Probe name', 'Diameter (µm)']])
                 save_table_as_image(top5_min[['Probe ID', 'Probe name', 'Diameter (µm)']],
-                                    "Top 5 Smallest Diameters", f"top5_smallest_")
+                                    "Top 5 Smallest Diameters", f"top5_smallest_{filename}")
 
                 # ❗ X/Y Error Out of Spec
                 error_out = df_sorted[
@@ -116,7 +116,7 @@ else:
                     st.table(error_out[['Probe ID', 'User Defined Label 4', 'X Error (µm)', 'Y Error (µm)']])
                     save_table_as_image(
                         error_out[['Probe ID', 'User Defined Label 4', 'X Error (µm)', 'Y Error (µm)']],
-                        "XY Error Out of Spec", f"xy_error_out_of_spec_"
+                        "XY Error Out of Spec", f"xy_error_out_of_spec_{filename}"
                     )
 
                 # 🔽 Download analyzed single Excel
