@@ -98,4 +98,4 @@ if st.session_state.multi_files_df:
                 st.rerun()
 
 # ➡️ ไปหน้า Analyzer 2
-st.page_link("pages/Probe Card Analyzer.py", label="➡️ ไปยังหน้า 🔍 Probe Card Analyzer 2")
+st.page_link("pages/Probe Card Analyzer.py", label="➡️ ไปยังหน้า 🔍 Probe Card Analyzer ")
