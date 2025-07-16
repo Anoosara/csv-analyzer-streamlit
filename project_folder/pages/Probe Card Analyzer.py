@@ -41,7 +41,7 @@ else:
             st.subheader(f"📁 File: {filename}")
             df = file_dict[filename]
 
-            if st.button(f"🗑️ ลบ `{filename}`", key=f"remove_{filename}"):
+            if st.button(f"🗑️ Delete `{filename}`", key=f"remove_{filename}"):
                 del st.session_state["multi_files_df"][filename]
                 st.rerun()
 
