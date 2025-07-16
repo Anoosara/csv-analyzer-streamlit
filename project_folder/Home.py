@@ -24,7 +24,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">📄 CSV → Excel (Filter by Probe ID)</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">📄 CSV → Excel (Probe Card Analyzer)</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtext">Upload one or more CSV files to extract only the Probe ID section.</div>', unsafe_allow_html=True)
 
 # ✅ Initialize session state for multiple files
