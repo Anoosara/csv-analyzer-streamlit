@@ -31,7 +31,7 @@ def save_table_as_image(df, title, filename):
 
 # ✅ โหลดจากหลายไฟล์
 if "multi_files_df" not in st.session_state or not st.session_state["multi_files_df"]:
-    st.warning("⚠️ กรุณาอัปโหลดไฟล์จากหน้า CSV → Excel ก่อน")
+    st.warning("⚠️ Please upload the file  first.")
 else:
     file_dict = st.session_state["multi_files_df"]
     tabs = st.tabs(list(file_dict.keys()))
