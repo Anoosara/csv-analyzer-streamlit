@@ -24,7 +24,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">📄 CSV → Excel (Probe Card Analyzer)</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">📄 CSV → Excel (Filter by Probe ID)</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtext">Upload one or more CSV files to extract only the Probe ID section.</div>', unsafe_allow_html=True)
 
 # ✅ Initialize session state for multiple files
@@ -44,35 +44,36 @@ if uploaded_files:
     for single_file in uploaded_files:
         file_name = single_file.name
 
-        raw_bytes = single_file.read()
-        detected_encoding = chardet.detect(raw_bytes)['encoding']
-        text = raw_bytes.decode(detected_encoding or "utf-8", errors="ignore")
-        lines = text.splitlines()
+        with st.spinner(f"⏳ Processing `{file_name}`..."):
+            raw_bytes = single_file.read()
+            detected_encoding = chardet.detect(raw_bytes)['encoding']
+            text = raw_bytes.decode(detected_encoding or "utf-8", errors="ignore")
+            lines = text.splitlines()
 
-        # 🔍 Find the "Probe ID" row
-        start_idx = None
-        for i, line in enumerate(lines):
-            first_col = line.strip().split(',')[0].strip()
-            if first_col == "Probe ID":
-                start_idx = i
-                break
+            # 🔍 Find the "Probe ID" row
+            start_idx = None
+            for i, line in enumerate(lines):
+                first_col = line.strip().split(',')[0].strip()
+                if first_col == "Probe ID":
+                    start_idx = i
+                    break
 
-        if start_idx is None:
-            st.error(f"❌ 'Probe ID' not found in `{file_name}`.")
-            continue
+            if start_idx is None:
+                st.error(f"❌ 'Probe ID' not found in `{file_name}`.")
+                continue
 
-        data_block = []
-        for line in lines[start_idx:]:
-            if line.strip() == "" or all(cell.strip() == "" for cell in line.strip().split(',')):
-                break
-            data_block.append(line)
+            data_block = []
+            for line in lines[start_idx:]:
+                if line.strip() == "" or all(cell.strip() == "" for cell in line.strip().split(',')):
+                    break
+                data_block.append(line)
 
-        csv_block = StringIO("\n".join(data_block))
-        df = pd.read_csv(csv_block)
-        df.columns = [col.replace("ตm", "µm").replace("um", "µm") for col in df.columns]
+            csv_block = StringIO("\n".join(data_block))
+            df = pd.read_csv(csv_block)
+            df.columns = [col.replace("ตm", "µm").replace("um", "µm") for col in df.columns]
 
-        # ✅ Save to session state dict
-        st.session_state.multi_files_df[file_name] = df
+            # ✅ Save to session state dict
+            st.session_state.multi_files_df[file_name] = df
 
 # ✅ Show stored data
 if st.session_state.multi_files_df:
@@ -98,4 +99,4 @@ if st.session_state.multi_files_df:
                 st.rerun()
 
 # ➡️ ไปหน้า Analyzer 2
-st.page_link("pages/Probe Card Analyzer.py", label="➡️ Go to 🔍 Probe Card Analyzer ")
+st.page_link("pages/Probe_Card_Analyzer_2.py", label="➡️ Go to 🔍 Probe Card Analyzer ")
