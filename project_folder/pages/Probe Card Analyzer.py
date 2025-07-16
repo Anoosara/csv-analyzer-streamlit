@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 st.set_page_config(page_title="Analyzer 2", layout="wide")
-st.title("📊 Probe Card Analyzer 2")
+st.title("📊 Probe Card Analyzer ")
 
 def save_table_as_image(df, title, filename):
     fig, ax = plt.subplots(figsize=(6, 2 + 0.3 * len(df)))
